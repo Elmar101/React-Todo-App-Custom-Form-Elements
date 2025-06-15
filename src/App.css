@@ -15,8 +15,14 @@ tr:nth-child(odd) {
   background-color: #dddddd;
 }
 
-i {
+.error {
   display: inline-block;
   margin: 5px 0px;
   color: red;
+}
+
+.no-data {
+  background: rgb(246, 246, 228);
+  text-align: center;
+  font-size: 10px;
 }

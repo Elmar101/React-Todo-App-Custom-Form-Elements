@@ -4,19 +4,20 @@ interface IState {
   error: string;
 }
 
-interface IChangeParams {
+export interface IChangeParams {
   name: ComponentProps<'input'>['name'];
   value: ComponentProps<'input'>['value'];
 }
 interface IProps extends Omit<ComponentProps<'input'>, 'onChange'> {
   label?: string;
   onChange?: (params: IChangeParams) => void;
+  isError?: boolean;
 }
-export const Input: FC<IProps> = ({ label, onChange, ...rest }) => {
+export const Input: FC<IProps> = ({ label, isError=false, onChange, ...rest }) => {
   const [state, setState] = useState<IState>({ error: '' });
   const onBlurInput: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const { name, value } = event?.target;
-    if (!value) {
+    if (!value && isError) {
       setState((prevState) => ({
         ...prevState,
         error: `${name[0].toUpperCase() + name.slice(1)} is Required`,
@@ -31,7 +32,7 @@ export const Input: FC<IProps> = ({ label, onChange, ...rest }) => {
         ...prevState,
         error: '',
       }));
-    } else if (!value) {
+    } else if (!value && isError) {
       setState((prevState) => ({
         ...prevState,
         error: `${name[0].toUpperCase() + name.slice(1)} is Required`,
@@ -42,9 +43,11 @@ export const Input: FC<IProps> = ({ label, onChange, ...rest }) => {
 
   return (
     <>
-      <label> {label} : </label>
-      <input {...rest} onBlur={onBlurInput} onChange={onChangeInput} />
-      {state?.error && <i>{state?.error}</i>}
+      <div>
+        <label> {label} : </label>
+        <input {...rest} onBlur={onBlurInput} onChange={onChangeInput} />
+      </div>
+      {(state?.error && isError) && <div className='error'>{state?.error}</div>}
     </>
   );
 };
