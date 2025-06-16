@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import './App.css';
-import { Input, type IChangeParams } from './components/Input';
+import { Input, type IChangeParams } from './components/ui/Input';
+import FormComponent from './components/FormComonent';
 
 interface IUser {
   name: string;
   sname: string;
   id: string;
 }
+
 interface IState {
   user: IUser;
   tableData?: IUser[];
@@ -23,23 +25,16 @@ function App() {
     tableData: []
   });
 
-  const onChangeInput = ({ name, value }: IChangeParams) => {
-    setState(prevState => ({
-      ...prevState,
-      user: { ...prevState.user, [name as string]: value }
-    }))
-  }
-
-  const onSubmitForm = () => {
-    const findedUser = state.tableData?.find(user=> user.id ===state.user.id);
+  const onSubmitForm = (user: IUser) => {
+    const findedUser = state.tableData?.find(item=> item.id === user.id);
     setState((prevState) => ({
       ...prevState,
       tableData: findedUser 
         ?  prevState.tableData?.map(item=>{
-          if(item.id === findedUser.id) return state.user
+          if(item.id === findedUser.id) return user
           return item;
         })
-        : [{...state.user, id: new Date().toISOString()+Math.random()}, ...prevState?.tableData!],
+        : [{...user, id: new Date().toISOString()+Math.random()}, ...prevState?.tableData!],
       user: defaultUser,
     }))
   }
@@ -48,7 +43,7 @@ function App() {
     const findedUser = state.tableData?.find(user => user.id === state.user.id)!
     setState((prevState)=>({
       ...prevState,
-      user: findedUser,
+      user: findedUser ?? defaultUser,
     }))
   }
 
@@ -68,36 +63,10 @@ function App() {
 
   return (
     <div>
-      <form>
-        <div>
-          <Input
-            value={state.user.name}
-            name="name"
-            label="Name"
-            onChange={onChangeInput}
-            isError
-          />
-        </div>
-
-        <br />
-        <div>
-          <Input
-            value={state.user.sname}
-            label="SName"
-            name="sname"
-            onChange={onChangeInput}
-            isError
-          />
-        </div>
-
-        <br />
-        <button type='button' onClick={onSubmitForm}> SAVE FORM </button>
-        <button type='button' onClick={onCancelForm}> Cancel FORM </button>
-      </form>
       <br />
       <br />
 
-
+     <FormComponent onSubmit={onSubmitForm} onCancel={onCancelForm}/>
       
 
       <table>
