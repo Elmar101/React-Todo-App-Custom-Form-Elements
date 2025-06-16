@@ -16,9 +16,15 @@ const defaultUser: IUser = {
 interface IProps {
     onSubmit:(user: IUser)=> void
     onCancel:()=> void
+    selectedUser?: IUser
 }
-const FormComponent:FC<IProps> = ({onSubmit, onCancel}) => {
+const FormComponent:FC<IProps> = ({onSubmit, onCancel, selectedUser}) => {
     const [user, setUser] = useState<IUser>(defaultUser);
+
+    useEffect(()=>{
+    const hasSelectedUser = selectedUser && Object.values(selectedUser!).filter(Boolean)
+        if(hasSelectedUser) setUser(selectedUser)
+    },[selectedUser]);
 
     const onChangeInput = ({ name, value }: IChangeParams) => {
         console.log({name, value})

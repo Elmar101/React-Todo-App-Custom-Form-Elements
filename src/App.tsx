@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './App.css';
-import { Input, type IChangeParams } from './components/ui/Input';
 import FormComponent from './components/FormComonent';
 
 interface IUser {
@@ -12,6 +11,7 @@ interface IUser {
 interface IState {
   user: IUser;
   tableData?: IUser[];
+  selectedUser?: IUser
 }
 
 const defaultUser: IUser = {
@@ -22,7 +22,7 @@ const defaultUser: IUser = {
 function App() {
   const [state, setState] = useState<IState>({
     user: defaultUser,
-    tableData: []
+    tableData: [],
   });
 
   const onSubmitForm = (user: IUser) => {
@@ -57,7 +57,7 @@ function App() {
   const onEditRow = ({name, sname, id}: IUser ) => {
     setState((prevState)=>({
       ...prevState,
-      user: {name, sname, id}
+      selectedUser: {name, sname, id}
     }))
   }
 
@@ -66,7 +66,7 @@ function App() {
       <br />
       <br />
 
-     <FormComponent onSubmit={onSubmitForm} onCancel={onCancelForm}/>
+     <FormComponent onSubmit={onSubmitForm} onCancel={onCancelForm} selectedUser={state.selectedUser}/>
       
 
       <table>
